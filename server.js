@@ -16,7 +16,7 @@ require('./utils/cronJobs');
 require('dotenv').config();
 
 app.use(cors({
-  origin: "http://localhost:5173",
+  origin: "https://amjilt-event-mate.netlify.app",
   credentials: true
 }));
 
