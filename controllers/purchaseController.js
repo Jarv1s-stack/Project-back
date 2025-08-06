@@ -1,19 +1,19 @@
 const pool = require('../config/db');
 
-// Купить товар
+
 exports.buyItem = async (req, res) => {
   try {
     const userId = req.user.id;
     const { itemId } = req.body;
 
-    // Проверка на существование товара
+
     const itemRes = await pool.query('SELECT id, price FROM shop WHERE id = $1', [itemId]);
     if (!itemRes.rows.length) {
       return res.status(404).json({ message: 'Товар не найден' });
     }
     const item = itemRes.rows[0];
 
-    // Проверка points пользователя
+
     const userRes = await pool.query('SELECT points FROM users WHERE id = $1', [userId]);
     const points = userRes.rows[0].points;
     if (points < item.price) {

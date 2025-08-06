@@ -32,7 +32,7 @@ app.use('/api/users', userRoutes);
 
 
 
-// Статус сервера
+
 app.get('/', (req, res) => res.send('EventMate API is working'));
 
 const PORT = process.env.PORT || 5000;

@@ -1,17 +1,16 @@
 const pool = require('../config/db');
 
-// Валидация даты
+
 function isValidDate(dateString) {
   return !isNaN(Date.parse(dateString));
 }
 
-// Выйти из события
+
 exports.leaveEvent = async (req, res) => {
   try {
     const { id } = req.params;
     const userId = req.user.id;
 
-    // Проверяем, что пользователь уже в списке участников
     const exists = await pool.query(
       'SELECT * FROM event_participants WHERE event_id = $1 AND user_id = $2',
       [id, userId]
@@ -20,7 +19,7 @@ exports.leaveEvent = async (req, res) => {
       return res.status(400).json({ message: 'Вы не участвуете в этом событии' });
     }
 
-    // Удаляем запись о его участии
+
     await pool.query(
       'DELETE FROM event_participants WHERE event_id = $1 AND user_id = $2',
       [id, userId]
@@ -34,7 +33,7 @@ exports.leaveEvent = async (req, res) => {
 };
 
 
-// Создать событие (автор сразу участник)
+
 exports.createEvent = async (req, res) => {
   try {
     const { title, description, date } = req.body;
@@ -44,20 +43,19 @@ exports.createEvent = async (req, res) => {
       return res.status(400).json({ message: 'Некорректные данные события' });
     }
 
-    // Создаём событие
+
     const eventRes = await pool.query(
       'INSERT INTO events (title, description, date, user_id) VALUES ($1, $2, $3, $4) RETURNING *',
       [title, description, date, userId]
     );
     const event = eventRes.rows[0];
 
-    // Добавляем автора в участники (ON CONFLICT — защита от дубля)
     await pool.query(
       'INSERT INTO event_participants (event_id, user_id) VALUES ($1, $2) ON CONFLICT DO NOTHING',
       [event.id, userId]
     );
 
-    // Получаем участников (у автора он будет один — сам)
+
     const participantsRes = await pool.query(
       `SELECT users.id, users.username
        FROM event_participants
@@ -74,7 +72,7 @@ exports.createEvent = async (req, res) => {
   }
 };
 
-// Получить все актуальные события (ещё не прошли)
+
 exports.getEvents = async (req, res) => {
   try {
     const now = new Date();
@@ -84,7 +82,7 @@ exports.getEvents = async (req, res) => {
     );
     const events = eventsRes.rows;
 
-    // Для оптимизации здесь НЕ добавляем участников к каждому событию — фронт получает только основную инфу
+
     res.json(events);
   } catch (e) {
     console.error("Get events error:", e);
@@ -92,7 +90,7 @@ exports.getEvents = async (req, res) => {
   }
 };
 
-// Получить событие по id (с массивом участников)
+
 exports.getEventById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -102,7 +100,7 @@ exports.getEventById = async (req, res) => {
     }
     const event = eventRes.rows[0];
 
-    // Обязательный запрос к участникам!
+
     const participantsRes = await pool.query(
       `SELECT users.id, users.username
        FROM event_participants
@@ -122,7 +120,7 @@ exports.getEventById = async (req, res) => {
 
 
 
-// Удалить событие (только владелец)
+
 exports.deleteEvent = async (req, res) => {
   try {
     const { id } = req.params;
@@ -140,7 +138,7 @@ exports.deleteEvent = async (req, res) => {
   }
 };
 
-// Присоединиться к событию
+
 exports.joinEvent = async (req, res) => {
   try {
     const { id } = req.params;

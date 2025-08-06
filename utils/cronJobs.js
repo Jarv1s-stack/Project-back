@@ -1,7 +1,7 @@
 const cron = require('node-cron');
 const pool = require('../config/db');
 
-// Сколько начислять points участникам
+
 const REWARD_POINTS = 5;
 
 async function rewardAndDeletePastEvents() {

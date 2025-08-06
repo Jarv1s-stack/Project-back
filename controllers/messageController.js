@@ -1,6 +1,6 @@
 const pool = require('../config/db');
 
-// Получить сообщения события (без проверки на участие)
+
 exports.getMessages = async (req, res) => {
   try {
     const { eventId } = req.params;
@@ -19,7 +19,7 @@ exports.getMessages = async (req, res) => {
   }
 };
 
-// Отправить сообщение в чат события (разрешено любому залогиненному)
+
 exports.sendMessage = async (req, res) => {
   try {
     const { eventId } = req.params;
@@ -30,9 +30,6 @@ exports.sendMessage = async (req, res) => {
       return res.status(400).json({ message: 'Проверьте текст сообщения (1-500 символов)' });
     }
 
-    // --- убрана проверка на участие! ---
-
-    // Запись сообщения
     const result = await pool.query(
       'INSERT INTO messages(sender_id, event_id, content) VALUES($1, $2, $3) RETURNING id, content, created_at',
       [userId, eventId, content]

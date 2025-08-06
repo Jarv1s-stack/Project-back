@@ -1,6 +1,4 @@
-// backend/controllers/shopController.js
 
-// Здесь пока статичный массив товаров (можно сделать через БД, если потребуется)
 const items = [
   {
     id: 1,
