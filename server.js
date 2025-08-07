@@ -16,8 +16,8 @@ require('./utils/cronJobs');
 require('dotenv').config();
 
 app.use(cors({
-  // origin: "https://amjilt-event-mate.netlify.app/",
-  origin: "http://localhost:5173/",
+  // origin: "https://amjilt-event-mate.netlify.app",
+  origin: "http://localhost:5173",
   credentials: true
 }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
