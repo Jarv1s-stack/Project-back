@@ -19,7 +19,6 @@ app.use(cors({
   origin: "https://amjilt-event-mate.netlify.app",
   credentials: true
 }));
-
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
  
 app.use('/api/auth', authRoutes);
